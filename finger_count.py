@@ -12,7 +12,7 @@ video = cv2.VideoCapture(0)
 
 # Inicia variáveis auxiliares com mediapipe
 hand = mp.solutions.hands
-Hand = hand.Hands(max_num_hands = 1) #Detecta apenas 1 mao
+Hand = hand.Hands(max_num_hands = 2) #Detecta apenas 1 mao
 mpDraw = mp.solutions.drawing_utils
 
 while True:
