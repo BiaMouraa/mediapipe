@@ -35,28 +35,26 @@ while True:
             #Imprime a numeracao de cada ponto e adiciona suas coord. no array
             for id,cord in enumerate(points.landmark):
                 cx, cy = int(cord.x*w), int(cord.y*h)
-                cv2.putText(img, str(id), (cx, cy+10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,0,0), 2)
                 pontos.append((cx,cy))
 
         dedos = [8,12,16,20] #pontos das extremidades de cada dedo
         contador = 0
+        length = []
         if points: #se houver pontos, ou seja, se for identificada a mao
-            if pontos[4][0] < pontos[2][0]: #condicao dedao esquerdo
-                contador += 1
-            for x in dedos:
-                if pontos[x][1] < pontos[x-2][1]:
-                    contador += 1
+            cv2.line(img, pontos[4], pontos[8], (255,0,0), 3)
+            length.append(math.hypot(pontos[4][0]-pontos[8][0], pontos[4][1]-pontos[8][1]))
+            cv2.putText(img, str(int(length[0])), (pontos[4][0], pontos[4][1]-50), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,0,0), 2)
+            for i in range(3):
+                cv2.line(img, pontos[dedos[i]], pontos[dedos[i+1]], (255,0,0), 3)
+                length.append(math.hypot(pontos[dedos[i]][0]-pontos[dedos[i+1]][0], pontos[dedos[i]][1]-pontos[dedos[i+1]][1]))
+                cv2.putText(img, str(int(length[i+1])), (pontos[dedos[i]][0]-50, pontos[dedos[i]][1]), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,0,0), 2)
 
-
-            cv2.putText(img, str(contador), (100, 100), cv2.FONT_HERSHEY_SIMPLEX, 4, (255,0,0), 5)
-
-            print("Coordenadas em pixel")
-            print("Dedao: ", pontos[4])
-            print("Indicador: ", pontos[8])
-            print("Meio: ", pontos[12])
-            print("Anelar: ", pontos[16])
-            print("Mindinho: ", pontos[20])
-            print("\n")
+        print("Distancia em pixel")
+        print("dedao -> indicador: ", length[0])
+        print("indicador -> meio: ", length[1])
+        print("meio -> anelar: ", length[2])
+        print("anelar -> mindinho: ", length[3])
+        print("\n")
 
     cv2.imshow('Imagem', img)
     cv2.waitKey(1)
